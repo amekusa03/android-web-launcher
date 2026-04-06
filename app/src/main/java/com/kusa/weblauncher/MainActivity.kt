@@ -96,8 +96,10 @@ fun SlotManagerScreen(
 
     if (selectedSlot != null) {
         val slotKey = selectedSlot!!
-        val currentInfo by repository.getSlotInfo(slotKey).collectAsState(initial = SlotInfo())
+        // val currentInfo by repository.getSlotInfo(slotKey).collectAsState(initial = SlotInfo())
+        val currentInfo by repository.getSlotInfo(slotKey).collectAsState(initial = null)
 
+        // データがロードされた（nullでなくなった）らダイアログを表示
         EditSlotDialog(
             slotKey = slotKey,
             initialInfo = currentInfo ?: SlotInfo(),
@@ -144,10 +146,16 @@ fun EditSlotDialog(
     onSave: (SlotInfo) -> Unit
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
-    var label by remember { mutableStateOf(initialInfo.label) }
-    var url by remember { mutableStateOf(initialInfo.url) }
-    var iconColor by remember { mutableStateOf(initialInfo.iconColor) }
-    var useCustomTabs by remember { mutableStateOf(initialInfo.useCustomTabs) }
+
+    var label by remember(initialInfo) { mutableStateOf(initialInfo.label) }
+    var url by remember(initialInfo) { mutableStateOf(initialInfo.url) }
+    var iconColor by remember(initialInfo) { mutableStateOf(initialInfo.iconColor) }
+    var useCustomTabs by remember(initialInfo) { mutableStateOf(initialInfo.useCustomTabs) }
+
+    //var label by remember { mutableStateOf(initialInfo.label) }
+    //var url by remember { mutableStateOf(initialInfo.url) }
+    //var iconColor by remember { mutableStateOf(initialInfo.iconColor) }
+    //var useCustomTabs by remember { mutableStateOf(initialInfo.useCustomTabs) }
 
     AlertDialog(
         onDismissRequest = onDismiss,

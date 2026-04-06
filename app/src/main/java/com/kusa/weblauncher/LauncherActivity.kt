@@ -26,7 +26,8 @@ class LauncherActivity : ComponentActivity() {
             componentName.endsWith("Slot3") -> "slot_3"
             componentName.endsWith("Slot4") -> "slot_4"
             componentName.endsWith("Slot5") -> "slot_5"
-            else -> null
+            //else -> null
+            else -> intent.getStringExtra("TARGET_SLOT") ?: "" // ショートカット用
         }
 
         if (slotKey != null) {
