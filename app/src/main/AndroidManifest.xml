@@ -38,10 +38,10 @@
             android:icon="@drawable/ic_launcher_slot1"
             android:label="Slot 1"
             android:targetActivity=".LauncherActivity">
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity-alias>
 
         <!-- Slot 2 -->
@@ -52,10 +52,10 @@
             android:icon="@drawable/ic_launcher_slot2"
             android:label="Slot 2"
             android:targetActivity=".LauncherActivity">
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity-alias>
 
         <!-- Slot 3 -->
@@ -66,10 +66,10 @@
             android:icon="@drawable/ic_launcher_slot3"
             android:label="Slot 3"
             android:targetActivity=".LauncherActivity">
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity-alias>
 
         <!-- Slot 4 -->
@@ -80,10 +80,10 @@
             android:icon="@drawable/ic_launcher_slot4"
             android:label="Slot 4"
             android:targetActivity=".LauncherActivity">
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity-alias>
 
         <!-- Slot 5 -->
@@ -94,10 +94,10 @@
             android:icon="@drawable/ic_launcher_slot5"
             android:label="Slot 5"
             android:targetActivity=".LauncherActivity">
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity-alias>
     </application>
 </manifest>

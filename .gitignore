@@ -14,6 +14,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/doc
 
 # 各モジュール（appなど）のビルド生成物
 /*/build
