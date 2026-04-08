@@ -7,14 +7,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -43,7 +48,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // updateAliasEnabled メソッドを関数リファレンスとして渡す
                     SlotManagerScreen(
                         repository = repository,
                         initialSlot = initialSlot,
@@ -56,12 +60,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * [FR-06] エイリアスの動的無効化
-     * URLが設定されている場合はドロワーに表示し、空の場合は非表示にする
-     */
     private fun updateAliasEnabled(slotKey: String, enabled: Boolean) {
-        // slot_1 -> com.kusa.weblauncher.Slot1 に変換
         val aliasName = slotKey.replace("slot_", "Slot").replaceFirstChar { it.uppercase() }
         val componentName = ComponentName(packageName, "$packageName.$aliasName")
 
@@ -75,11 +74,22 @@ class MainActivity : ComponentActivity() {
             packageManager.setComponentEnabledSetting(
                 componentName,
                 newState,
-                PackageManager.DONT_KILL_APP
+                0 
             )
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+}
+
+fun formatSlotDisplayName(slotKey: String): String {
+    return when (slotKey) {
+        "slot_1" -> "Web①"
+        "slot_2" -> "Web②"
+        "slot_3" -> "Web③"
+        "slot_4" -> "Web④"
+        "slot_5" -> "Web⑤"
+        else -> slotKey
     }
 }
 
@@ -96,10 +106,8 @@ fun SlotManagerScreen(
 
     if (selectedSlot != null) {
         val slotKey = selectedSlot!!
-        // val currentInfo by repository.getSlotInfo(slotKey).collectAsState(initial = SlotInfo())
         val currentInfo by repository.getSlotInfo(slotKey).collectAsState(initial = null)
 
-        // データがロードされた（nullでなくなった）らダイアログを表示
         EditSlotDialog(
             slotKey = slotKey,
             initialInfo = currentInfo ?: SlotInfo(),
@@ -122,7 +130,8 @@ fun SlotManagerScreen(
                 val info by repository.getSlotInfo(slotKey).collectAsState(initial = SlotInfo())
                 ListItem(
                     headlineContent = {
-                        Text(if (info?.label.isNullOrEmpty()) "未設定 ($slotKey)" else info!!.label)
+                        val baseName = formatSlotDisplayName(slotKey)
+                        Text(if (info?.label.isNullOrEmpty()) "未設定 ($baseName)" else info!!.label)
                     },
                     supportingContent = { Text(info?.url ?: "URL未設定") },
                     trailingContent = {
@@ -132,7 +141,7 @@ fun SlotManagerScreen(
                     },
                     modifier = Modifier.clickable { selectedSlot = slotKey }
                 )
-                HorizontalDivider() // ここに不要な引数がないことを確認
+                HorizontalDivider()
             }
         }
     }
@@ -152,16 +161,20 @@ fun EditSlotDialog(
     var iconColor by remember(initialInfo) { mutableStateOf(initialInfo.iconColor) }
     var useCustomTabs by remember(initialInfo) { mutableStateOf(initialInfo.useCustomTabs) }
 
-    //var label by remember { mutableStateOf(initialInfo.label) }
-    //var url by remember { mutableStateOf(initialInfo.url) }
-    //var iconColor by remember { mutableStateOf(initialInfo.iconColor) }
-    //var useCustomTabs by remember { mutableStateOf(initialInfo.useCustomTabs) }
+    // 選びやすいプリセットカラー
+    val presetColors = listOf(
+        "#F44336", "#E91E63", "#9C27B0", "#673AB7", 
+        "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", 
+        "#009688", "#4CAF50", "#8BC34A", "#CDDC39", 
+        "#FFEB3B", "#FFC107", "#FF9800", "#FF5722",
+        "#795548", "#9E9E9E", "#000000"
+    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("スロット編集: $slotKey") },
+        title = { Text("編集: ${formatSlotDisplayName(slotKey)}") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = label,
                     onValueChange = { label = it },
@@ -174,12 +187,32 @@ fun EditSlotDialog(
                     label = { Text("URL (http://〜)") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                OutlinedTextField(
-                    value = iconColor,
-                    onValueChange = { iconColor = it },
-                    label = { Text("アイコン色 (Hex: #RRGGBB)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+
+                // アイコン色の選択（カラーチップ）
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("アイコンの色", style = MaterialTheme.typography.labelLarge)
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(vertical = 4.dp)
+                    ) {
+                        items(presetColors) { colorHex ->
+                            val colorInt = try { Color.parseColor(colorHex) } catch (e: Exception) { Color.GRAY }
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(androidx.compose.ui.graphics.Color(colorInt))
+                                    .clickable { iconColor = colorHex }
+                                    .border(
+                                        width = if (iconColor.equals(colorHex, ignoreCase = true)) 4.dp else 0.dp,
+                                        color = if (iconColor.equals(colorHex, ignoreCase = true)) MaterialTheme.colorScheme.primary else androidx.compose.ui.graphics.Color.Transparent,
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                    }
+                }
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -191,7 +224,6 @@ fun EditSlotDialog(
                     Text("Chrome Custom Tabsを使用する")
                 }
 
-                // [FR-02] ホーム画面ショートカット追加ボタン
                 Button(
                     onClick = {
                         createHomeScreenShortcut(context, label, url, iconColor, slotKey)
@@ -217,9 +249,7 @@ fun EditSlotDialog(
         }
     )
 }
-/**
- * [FR-02] ホーム画面に動的ショートカットを作成する
- */
+
 private fun createHomeScreenShortcut(
     context: android.content.Context,
     label: String,
@@ -231,16 +261,12 @@ private fun createHomeScreenShortcut(
         return
     }
 
-    // ショートカット起動時のIntent (LauncherActivity経由)
     val shortcutIntent = Intent(context, LauncherActivity::class.java).apply {
         action = Intent.ACTION_VIEW
-        // SlotIDを埋め込むことで、起動時にどの設定を使うかLauncherActivityが判断できる
-        // activity-alias名に合わせて Slot1, Slot2... の形式で送る
         val aliasName = slotKey.replace("slot_", "Slot").replaceFirstChar { it.uppercase() }
         setClassName(context.packageName, "${context.packageName}.$aliasName")
     }
 
-    // アイコンの生成 (指定された色で円形アイコンを作成)
     val colorInt = try { Color.parseColor(colorHex) } catch (e: Exception) { Color.BLUE }
     val iconDrawable = GradientDrawable().apply {
         shape = GradientDrawable.OVAL

@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WebLauncher">
 
-        <!-- 管理画面: アプリ一覧から直接起動される -->
+        <!-- 管理画面 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -23,20 +23,21 @@
             </intent-filter>
         </activity>
 
-        <!-- 共通ロジックActivity: UIを持たず、ブラウザへの橋渡しを行う -->
+        <!-- 共通ロジックActivity -->
         <activity
             android:name=".LauncherActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!-- Slot 1 -->
         <activity-alias
             android:name=".Slot1"
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_slot1"
-            android:label="Slot 1"
+            android:label="Web①"
             android:targetActivity=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,7 +51,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_slot2"
-            android:label="Slot 2"
+            android:label="Web②"
             android:targetActivity=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +65,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_slot3"
-            android:label="Slot 3"
+            android:label="Web③"
             android:targetActivity=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,7 +79,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_slot4"
-            android:label="Slot 4"
+            android:label="Web④"
             android:targetActivity=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -92,7 +93,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_slot5"
-            android:label="Slot 5"
+            android:label="Web⑤"
             android:targetActivity=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
