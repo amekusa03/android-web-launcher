@@ -31,3 +31,5 @@ local.properties
 
 # Google Services (もし将来使う場合)
 # google-services.json
+
+.doc
