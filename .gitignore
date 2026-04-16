@@ -33,3 +33,11 @@ local.properties
 # google-services.json
 
 .doc
+
+*.jks
+*.jks
+*.keystore
+
+text:/.gitignore
+*.dm
+*.apk

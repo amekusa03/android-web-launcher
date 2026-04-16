@@ -45,7 +45,11 @@
 設定された名前をドロワーに表示されることはできませんでした。
 Nova Launcherでは変更できる事、AQUOS HOMEでは変更できない事は確認しました
 
-## 📝 開発の背景や詳細 
-https://html-sigma-amber.vercel.app/app/android_web_launcher/android_web_launcher.html
+## 📝 開発の背景や詳細
+https://amekusa.vercel.app/app/android_web_launcher/android_web_launcher.html
+
 ## ⭕動画(you tube)
 https://youtu.be/1ZIV0SYgC7o
+
+## Qiita
+https://qiita.com/amekusa03/items/6f152f24d20b6f3c5851
